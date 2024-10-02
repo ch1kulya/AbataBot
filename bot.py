@@ -285,4 +285,35 @@ async def waifu_category_autocomplete(interaction: discord.Interaction, current:
         if current.lower() in cat['value'].lower() or current.lower() in cat['name'].lower()
     ]
 
+@bot.tree.command(name="random", description="Get a random anime title")
+async def random_command(interaction: discord.Interaction):
+    api_url = "https://api.anilibria.tv/v3/title/random"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(api_url) as response:
+            if response.status != 200:
+                await interaction.response.send_message("Failed to fetch data from Anilibria API.", ephemeral=True)
+                return
+            data = await response.json()
+
+    name_en = data['names']['en'] if data['names']['en'] else "N/A"
+    name_ru = data['names']['ru'] if data['names']['ru'] else "N/A"
+    combined_name = f"{name_en} / {name_ru}" if name_en != "N/A" and name_ru != "N/A" else name_en or name_ru or "N/A"
+    description = data['description'] if data['description'] else "No description available."
+    status = data['status']['string'] if 'status' in data and 'string' in data['status'] else "N/A"
+    genres = ", ".join(data['genres']) if data['genres'] else "N/A"
+    type_full = data['type']['full_string'] if 'type' in data and 'full_string' in data['type'] else "N/A"
+    
+    embed = discord.Embed(
+        title=combined_name,
+        description=description,
+        color=discord.Color.gold()
+    )
+    embed.set_footer(text=f"ID: {data['id']}")
+    embed.add_field(name="Status", value=status, inline=True)
+    embed.add_field(name="Type", value=type_full, inline=True)
+    embed.add_field(name="Year", value=data['season']['year'], inline=True)
+    embed.add_field(name="Genres", value=genres, inline=True)
+
+    await interaction.response.send_message(embed=embed)
+
 bot.run(TOKEN)
