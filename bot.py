@@ -5,6 +5,7 @@ import aiohttp
 import os
 from dotenv import load_dotenv
 import random
+import hmtai
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -50,6 +51,43 @@ CATEGORIES = {
         {'value': 'blowjob', 'name': 'Blowjob', 'color': discord.Color.red()}
     ]
 }
+
+NSFW_CATEGORIES = [
+    {'value': 'ass', 'name': 'Ass', 'color': discord.Color.red()},
+    {'value': 'cum', 'name': 'Cum', 'color': discord.Color.gold()},
+    {'value': 'classic', 'name': 'Classic', 'color': discord.Color.orange()},
+    {'value': 'creampie', 'name': 'Creampie', 'color': discord.Color.dark_gold()},
+    {'value': 'hentai', 'name': 'Hentai', 'color': discord.Color.dark_purple()},
+    {'value': 'masturbation', 'name': 'Masturbation', 'color': discord.Color.dark_orange()},
+    {'value': 'ero', 'name': 'Ero', 'color': discord.Color.magenta()},
+    {'value': 'orgy', 'name': 'Orgy', 'color': discord.Color.dark_grey()},
+    {'value': 'yuri', 'name': 'Yuri', 'color': discord.Color.magenta()},
+    {'value': 'pantsu', 'name': 'Pantsu', 'color': discord.Color.lighter_grey()},
+    {'value': 'glasses', 'name': 'Glasses', 'color': discord.Color.blurple()},
+    {'value': 'blowjob', 'name': 'Blowjob', 'color': discord.Color.dark_red()},
+    {'value': 'boobjob', 'name': 'Boobjob', 'color': discord.Color.pink()},
+    {'value': 'footjob', 'name': 'Footjob', 'color': discord.Color.dark_blue()},
+    {'value': 'handjob', 'name': 'Handjob', 'color': discord.Color.dark_magenta()},
+    {'value': 'boobs', 'name': 'Boobs', 'color': discord.Color.pink()},
+    {'value': 'thighs', 'name': 'Thighs', 'color': discord.Color.dark_blue()},
+    {'value': 'pussy', 'name': 'Pussy', 'color': discord.Color.lighter_grey()},
+    {'value': 'ahegao', 'name': 'Ahegao', 'color': discord.Color.yellow()},
+    {'value': 'uniform', 'name': 'Uniform', 'color': discord.Color.purple()},
+    {'value': 'tentacles', 'name': 'Tentacles', 'color': discord.Color.green()},
+    {'value': 'gif', 'name': 'GIF', 'color': discord.Color.teal()},
+]
+
+NEKOS_CATEGORIES = [
+    {'value': 'pat', 'name': 'Pat', 'color': discord.Color.blue()},
+    {'value': 'hug', 'name': 'Hug', 'color': discord.Color.green()},
+    {'value': 'kiss', 'name': 'Kiss', 'color': discord.Color.pink()},
+    {'value': 'slap', 'name': 'Slap', 'color': discord.Color.red()},
+    {'value': 'smug', 'name': 'Smug', 'color': discord.Color.purple()},
+    {'value': 'neko', 'name': 'Neko', 'color': discord.Color.orange()},
+    {'value': 'waifu', 'name': 'Waifu', 'color': discord.Color.gold()},
+    {'value': 'cuddle', 'name': 'Cuddle', 'color': discord.Color.magenta()},
+    {'value': 'feed', 'name': 'Feed', 'color': discord.Color.teal()},
+]
 
 TITLE_TEMPLATES = {
     'waifu': [
@@ -315,5 +353,108 @@ async def random_command(interaction: discord.Interaction):
     embed.add_field(name="Genres", value=genres, inline=True)
 
     await interaction.response.send_message(embed=embed)
+    
+@bot.tree.command(
+    name="hmtai",
+    description="Get a random NSFW image from the hmtai API."
+)
+@app_commands.describe(
+    category="Choose an NSFW category"
+)
+async def hmtai_command(interaction: discord.Interaction, category: str):
+    if not interaction.channel.is_nsfw():
+        await interaction.response.send_message("❌ This command can only be used in NSFW channels.", ephemeral=True)
+        return
+
+    category = category.lower()
+
+    valid_categories = [cat['value'] for cat in NSFW_CATEGORIES]
+
+    if category not in valid_categories:
+        display_categories = [cat['name'] for cat in NSFW_CATEGORIES]
+        categories_str = ', '.join(display_categories)
+        await interaction.response.send_message(f"❌ **Invalid category.**\nAvailable categories: {categories_str}", ephemeral=True)
+        return
+
+    try:
+        image_url = hmtai.useHM("nsfw", category)
+        if not image_url:
+            raise ValueError("Failed to get image URL.")
+    except Exception as e:
+        await interaction.response.send_message("❌ Failed to retrieve image. Please try again later.", ephemeral=True)
+        return
+
+    display_category = next((cat['name'] for cat in NSFW_CATEGORIES if cat['value'] == category), category.capitalize())
+    embed_title = f"Here is your image from the {display_category} category!"
+
+    embed_color = next((cat['color'] for cat in NSFW_CATEGORIES if cat['value'] == category), discord.Color.red())
+
+    embed = discord.Embed(
+        title=embed_title,
+        color=embed_color
+    )
+    embed.set_image(url=image_url)
+    embed.set_footer(text=f"Category: {display_category}")
+
+    await interaction.response.send_message(embed=embed)
+
+# Autocomplete for category
+@hmtai_command.autocomplete('category')
+async def hmtai_category_autocomplete(interaction: discord.Interaction, current: str):
+    return [
+        app_commands.Choice(name=cat['name'], value=cat['value'])
+        for cat in NSFW_CATEGORIES
+        if current.lower() in cat['value'].lower() or current.lower() in cat['name'].lower()
+    ]
+    
+@bot.tree.command(
+    name="nekos",
+    description="Get a random SFW image from the nekos endpoint."
+)
+@app_commands.describe(
+    category="Choose a category"
+)
+async def nekos_command(interaction: discord.Interaction, category: str):
+    category = category.lower()
+
+    valid_categories = [cat['value'] for cat in NEKOS_CATEGORIES]
+    if category not in valid_categories:
+        display_categories = [cat['name'] for cat in NEKOS_CATEGORIES]
+        categories_str = ', '.join(display_categories)
+        await interaction.response.send_message(f"❌ **Invalid category.**\nAvailable categories: {categories_str}", ephemeral=True)
+        return
+
+    # Fetch the image using hmtai.get("nekos", category)
+    try:
+        image_url = hmtai.get("nekos", category)
+        if not image_url:
+            raise ValueError("Failed to retrieve image URL.")
+    except Exception as e:
+        await interaction.response.send_message("❌ Failed to retrieve image. Please try again later.", ephemeral=True)
+        return
+
+    # Find the display category and embed color
+    display_category = next((cat['name'] for cat in NEKOS_CATEGORIES if cat['value'] == category), category.capitalize())
+    embed_color = next((cat['color'] for cat in NEKOS_CATEGORIES if cat['value'] == category), discord.Color.blue())
+
+    # Create the embed
+    embed_title = f"Here's your {display_category} image!"
+    embed = discord.Embed(
+        title=embed_title,
+        color=embed_color
+    )
+    embed.set_image(url=image_url)
+    embed.set_footer(text=f"Category: {display_category}")
+
+    await interaction.response.send_message(embed=embed)
+
+# Autocomplete for 'category'
+@nekos_command.autocomplete('category')
+async def nekos_category_autocomplete(interaction: discord.Interaction, current: str):
+    return [
+        app_commands.Choice(name=cat['name'], value=cat['value'])
+        for cat in NEKOS_CATEGORIES
+        if current.lower() in cat['value'].lower() or current.lower() in cat['name'].lower()
+    ]
 
 bot.run(TOKEN)
