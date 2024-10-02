@@ -47,17 +47,8 @@ A Discord bot that provides random anime waifu images and anime titles. Users ca
 3. **Using the Bot**:
     - Use the `/waifu` command to get random waifu images.
     - Use the `/random` command to fetch random anime titles.
-
-## Commands
-
-- **/waifu**
-    - **Description**: Get a random anime waifu image.
-    - **Parameters**:
-        - `type`: Choose content type (`SFW`, `NSFW`).
-        - `category`: Choose waifu category (e.g., `waifu`, `neko`, `hug`, etc.).
-
-- **/random**
-    - **Description**: Get a random anime title with detailed information.
+    - Use the `/nekos` command to get random neko images.
+    - Use the `/hmtai` command to get random hentai images.
 
 ## License
 
