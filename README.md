@@ -1,14 +1,14 @@
-# Abata Bot
+### Abata Bot
 
-A Discord bot that provides random anime waifu images and anime titles. Users can choose between SFW and NSFW content categories to receive themed images and explore random anime titles with detailed information.
+is a Discord bot that provides random anime waifu images and anime titles. Users can choose between SFW and NSFW content categories to receive themed images and explore random anime titles with detailed information.
 
-## Prerequisites
+### Prerequisites
 
 - **Python 3.8 or higher**: Ensure you have Python installed. You can download it from [python.org](https://www.python.org/).
 
 - **Discord Bot Token**: Create a Discord bot and obtain its token from the [Discord Developer Portal](https://discord.com/developers/applications).
 
-## Installation
+### Installation
 
 1. **Clone the Repository**:
     ```bash
@@ -34,7 +34,7 @@ A Discord bot that provides random anime waifu images and anime titles. Users ca
         ```
     - Replace `your_discord_bot_token_here` with your actual Discord bot token.
 
-## Deployment
+### Deployment
 
 1. **Run the Bot**:
     ```bash
@@ -49,7 +49,3 @@ A Discord bot that provides random anime waifu images and anime titles. Users ca
     - Use the `/random` command to fetch random anime titles.
     - Use the `/nekos` command to get random neko images.
     - Use the `/hmtai` command to get random hentai images.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
