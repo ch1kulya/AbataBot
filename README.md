@@ -1,12 +1,18 @@
-### Abata Bot
+## Abata Bot
 
-is a Discord bot that provides random anime waifu images and anime titles. Users can choose between SFW and NSFW content categories to receive themed images and explore random anime titles with detailed information.
+is a Discord bot that provides random anime images and titles from SFW and NSFW content categories.
+
+### Usage
+
+- `/waifu` command to get random waifu images.
+- `/random` command to fetch random Anilibria titles.
+- `/nekos` command to get random neko images.
+- `/hmtai` command to get random hentai images.
 
 ### Prerequisites
 
-- **Python 3.8 or higher**: Ensure you have Python installed. You can download it from [python.org](https://www.python.org/).
-
-- **Discord Bot Token**: Create a Discord bot and obtain its token from the [Discord Developer Portal](https://discord.com/developers/applications).
+- **Python**: Ensure you have Python installed. You can download it from [python.org](https://www.python.org/).
+- **Bot Token**: Create a Discord bot and obtain its token from the [Discord Developer Portal](https://discord.com/developers/applications).
 
 ### Installation
 
@@ -16,27 +22,23 @@ is a Discord bot that provides random anime waifu images and anime titles. Users
     cd AbataBot
     ```
 
-2. **Create a Virtual Environment** (optional but recommended):
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scripts\activate
-    ```
-
-3. **Install Dependencies**:
+2. **Install Dependencies**:
     ```bash
     pip install -r requirements.txt
     ```
 
-4. **Configure Environment Variables**:
+3. **Configure Environment Variables**:
     - Create a `.env` file in the project root:
+
         ```env
-        DISCORD_TOKEN=your_discord_bot_token_here
+        DISCORD_TOKEN=bot_token
         ```
-    - Replace `your_discord_bot_token_here` with your actual Discord bot token.
+    - Replace `bot_token` with your actual Discord bot token.
 
 ### Deployment
 
 1. **Run the Bot**:
+
     ```bash
     python bot.py
     ```
@@ -44,8 +46,4 @@ is a Discord bot that provides random anime waifu images and anime titles. Users
 2. **Invite the Bot to Your Server**:
     - Generate an invite link from the Discord Developer Portal with the necessary permissions and add the bot to your desired server.
 
-3. **Using the Bot**:
-    - Use the `/waifu` command to get random waifu images.
-    - Use the `/random` command to fetch random anime titles.
-    - Use the `/nekos` command to get random neko images.
-    - Use the `/hmtai` command to get random hentai images.
+#### Contributing is encouraged 🤗
